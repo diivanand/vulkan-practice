@@ -1,0 +1,47 @@
+# Build directories
+build/
+cmake-build-*/
+out/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+
+# Compiled objects
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+
+# CLion / JetBrains
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Vulkan/SPIR-V compiled shaders
+*.spv
+
+# Dependencies (if fetched locally)
+_deps/
+external/
+
+# Debug files
+*.dSYM/
+*.pdb
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
