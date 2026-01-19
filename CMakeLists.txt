@@ -40,6 +40,10 @@ add_executable(vulkan_practice
   src/main.cpp
   src/vk_app.h
   src/vk_app.cpp
+        src/glfw_initialization.h
+        src/glfw_window.h
+        src/glfw_window.cpp
+        src/glfw_initialization.cpp
 )
 
 target_link_libraries(vulkan_practice
