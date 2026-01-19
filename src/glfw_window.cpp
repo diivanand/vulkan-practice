@@ -2,8 +2,9 @@
 // Created by Diivanand Ramalingam on 1/19/26.
 //
 
-#include "glfw_window.h"
 #include <stdexcept>
+
+#include "glfw_window.h"
 
 void GLFWWindowDeleter::operator()(GLFWwindow* w) const noexcept {
     if (w) {

@@ -1,7 +1,9 @@
+#include <cstdint>
+
+#include <GLFW/glfw3.h>
+
 #include "glfw_initialization.h"
 #include "glfw_window.h"
-
-#include "../cmake-build-debug/_deps/glfw-src/include/GLFW/glfw3.h"
 
 int32_t main(int32_t, char**) {
     GlfwInitialization glfw; // RAII init/terminate
