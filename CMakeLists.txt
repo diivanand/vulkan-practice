@@ -38,8 +38,6 @@ FetchContent_MakeAvailable(glm)
 
 add_executable(vulkan_practice
   src/main.cpp
-  src/vk_app.h
-  src/vk_app.cpp
         src/glfw_initialization.h
         src/glfw_window.h
         src/glfw_window.cpp
