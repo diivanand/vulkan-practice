@@ -1,0 +1,10 @@
+add_library(asan_flags INTERFACE)
+
+function(enable_asan_for_target tgt)
+  if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU")
+    target_compile_options(${tgt} PRIVATE -fsanitize=address -fno-omit-frame-pointer)
+    target_link_options(${tgt} PRIVATE -fsanitize=address)
+  else()
+    message(WARNING "ASan not configured for compiler: ${CMAKE_CXX_COMPILER_ID}")
+  endif()
+endfunction()
