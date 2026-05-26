@@ -8,21 +8,21 @@
 
 namespace windowing {
 
-void GLFWWindowDeleter::operator()(GLFWwindow* w) const noexcept {
-    if (w) {
-        glfwDestroyWindow(w);
+void GlfwWindowDeleter::operator()(GLFWwindow* window) const noexcept {
+    if (window) {
+        glfwDestroyWindow(window);
     }
 }
 
-unique_glfw_window create_window(const int width, const int height, std::string_view title) {
+UniqueGlfwWindow createWindow(const int width, const int height, std::string_view title) {
 
-    GLFWwindow* raw = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
+    GLFWwindow* rawWindow = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
 
-    if (!raw) {
+    if (!rawWindow) {
         throw std::runtime_error("glfwCreateWindow failed");
     }
 
-    return unique_glfw_window{raw};
+    return UniqueGlfwWindow{rawWindow};
 }
 
 } // namespace windowing

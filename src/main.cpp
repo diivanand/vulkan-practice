@@ -8,7 +8,7 @@
 int32_t main(int32_t, char**) {
     windowing::GlfwInitialization glfw; // RAII init/terminate
 
-    windowing::unique_glfw_window window = windowing::create_window(800, 600, "Vulkan Engine");
+    windowing::UniqueGlfwWindow window = windowing::createWindow(800, 600, "Vulkan Engine");
 
     while (!glfwWindowShouldClose(window.get())) {
         glfwPollEvents();

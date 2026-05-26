@@ -47,11 +47,11 @@ TEST(TypeTraits, GlfwInitializationCannotDuplicateTerminationOwnership) {
 }
 
 TEST(TypeTraits, GlfwWindowHasUniqueTransferableOwnership) {
-    static_assert(std::is_move_constructible_v<windowing::unique_glfw_window>);
-    static_assert(std::is_move_assignable_v<windowing::unique_glfw_window>);
-    static_assert(!std::is_copy_constructible_v<windowing::unique_glfw_window>);
-    static_assert(!std::is_copy_assignable_v<windowing::unique_glfw_window>);
-    static_assert(noexcept(windowing::GLFWWindowDeleter{}(nullptr)));
+    static_assert(std::is_move_constructible_v<windowing::UniqueGlfwWindow>);
+    static_assert(std::is_move_assignable_v<windowing::UniqueGlfwWindow>);
+    static_assert(!std::is_copy_constructible_v<windowing::UniqueGlfwWindow>);
+    static_assert(!std::is_copy_assignable_v<windowing::UniqueGlfwWindow>);
+    static_assert(noexcept(windowing::GlfwWindowDeleter{}(nullptr)));
 
     SUCCEED();
 }
