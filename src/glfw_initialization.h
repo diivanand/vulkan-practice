@@ -7,7 +7,8 @@
 /// @brief RAII wrapper for GLFW initialization and termination.
 ///
 /// Initializes GLFW on construction and terminates on destruction.
-/// Non-copyable to ensure single initialization lifetime.
+/// Non-copyable and non-movable to keep termination tied to the object that
+/// successfully initialized GLFW.
 class GlfwInitialization {
 public:
     /// @brief Initializes the GLFW library.
@@ -15,8 +16,10 @@ public:
     GlfwInitialization();
 
     /// @brief Terminates the GLFW library and cleans up resources.
-    ~GlfwInitialization();
+    ~GlfwInitialization() noexcept;
 
     GlfwInitialization(const GlfwInitialization&) = delete;
     GlfwInitialization& operator=(const GlfwInitialization&) = delete;
+    GlfwInitialization(GlfwInitialization&&) = delete;
+    GlfwInitialization& operator=(GlfwInitialization&&) = delete;
 };

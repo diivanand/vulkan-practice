@@ -14,12 +14,14 @@ add_executable(unit_tests
 
 target_link_libraries(unit_tests
   PRIVATE
+    glfw
     GTest::gtest
     GTest::gmock
     GTest::gtest_main
 )
 
 target_compile_features(unit_tests PRIVATE cxx_std_20)
+target_include_directories(unit_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang")
   target_compile_options(unit_tests PRIVATE -Wall -Wextra -Wpedantic)

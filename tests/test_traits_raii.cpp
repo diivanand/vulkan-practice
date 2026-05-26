@@ -3,6 +3,9 @@
 #include <memory>
 #include <type_traits>
 
+#include "glfw_initialization.h"
+#include "glfw_window.h"
+
 // =============================================================================
 // Compile-time type trait tests
 // =============================================================================
@@ -34,6 +37,26 @@ TEST(TypeTraits, DeleterIsNoexcept) {
     // Verify deleter call operator is noexcept
     static_assert(noexcept(MockDeleter{}(nullptr)),
                   "Deleter should be noexcept");
+
+    SUCCEED();
+}
+
+TEST(TypeTraits, GlfwInitializationCannotDuplicateTerminationOwnership) {
+    static_assert(!std::is_copy_constructible_v<GlfwInitialization>);
+    static_assert(!std::is_copy_assignable_v<GlfwInitialization>);
+    static_assert(!std::is_move_constructible_v<GlfwInitialization>);
+    static_assert(!std::is_move_assignable_v<GlfwInitialization>);
+    static_assert(std::is_nothrow_destructible_v<GlfwInitialization>);
+
+    SUCCEED();
+}
+
+TEST(TypeTraits, GlfwWindowHasUniqueTransferableOwnership) {
+    static_assert(std::is_move_constructible_v<unique_glfw_window>);
+    static_assert(std::is_move_assignable_v<unique_glfw_window>);
+    static_assert(!std::is_copy_constructible_v<unique_glfw_window>);
+    static_assert(!std::is_copy_assignable_v<unique_glfw_window>);
+    static_assert(noexcept(GLFWWindowDeleter{}(nullptr)));
 
     SUCCEED();
 }

@@ -8,13 +8,12 @@
 int32_t main(int32_t, char**) {
     GlfwInitialization glfw; // RAII init/terminate
 
-    std::unique_ptr<GLFWwindow, GLFWWindowDeleter> window = create_window(800, 600, "Vulkan Engine");
+    unique_glfw_window window = create_window(800, 600, "Vulkan Engine");
 
     while (!glfwWindowShouldClose(window.get())) {
         glfwPollEvents();
     }
 
-    // window destroyed automatically since unique_ptr goes out of scope and calls GLFWWindowDeleter
-    // which in turn calls glfwTerminate
+    // The window is destroyed before glfw, whose destructor terminates GLFW.
     return 0;
 }

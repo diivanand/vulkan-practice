@@ -14,6 +14,6 @@ GlfwInitialization::GlfwInitialization() {
     }
 }
 
-GlfwInitialization::~GlfwInitialization() {
+GlfwInitialization::~GlfwInitialization() noexcept {
     glfwTerminate();
 }
