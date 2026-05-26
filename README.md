@@ -67,6 +67,9 @@ cmake --build build-app --target vulkan_practice
 
 ## Run The Application
 
+`src/main.cpp` is not a standalone program: it depends on CMake-provided GLFW
+include paths and linked libraries. Build and run the executable target instead:
+
 ```sh
 cmake --build build --target vulkan_practice
 ./build/vulkan_practice
@@ -74,6 +77,23 @@ cmake --build build --target vulkan_practice
 
 The application opens a desktop window and therefore needs a graphical login
 session. It is not currently a headless render test.
+
+### Debug From The Terminal
+
+Configure a Debug build, build the application target, and launch it with LLDB:
+
+```sh
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build --target vulkan_practice
+lldb ./build/vulkan_practice
+```
+
+From the LLDB prompt, set a breakpoint and start the process:
+
+```lldb
+breakpoint set --file main.cpp --line 9
+run
+```
 
 ## Run Tests
 
@@ -143,6 +163,53 @@ GLFW/glfw3.h file not found
 
 If that warning remains after selecting the CMake target, use
 **Tools > CMake > Reload CMake Project**.
+
+### Debug With Breakpoints
+
+To debug code in `main.cpp` or the GLFW wrappers:
+
+1. Select `vulkan_practice` in the run configuration dropdown, not `main.cpp`.
+2. Open the relevant source file and click the left gutter next to a line to
+   add a breakpoint.
+3. Click the debug icon for `vulkan_practice`, or select
+   **Run > Debug 'vulkan_practice'**.
+
+CLion will build and debug the CMake target with the fetched GLFW include path
+and linked libraries. In **Run > Edit Configurations...**, the temporary
+`C/C++ File.main.cpp` configuration may be removed to avoid selecting it
+accidentally.
+
+## Xcode
+
+CMake can generate an Xcode project using the same `vulkan_practice` target and
+fetched dependencies:
+
+```sh
+cmake -S . -B xcode-build -G Xcode
+open xcode-build/VulkanPractice.xcodeproj
+```
+
+In Xcode:
+
+1. Select the `vulkan_practice` scheme in the toolbar.
+2. Select **Product > Scheme > Edit Scheme...**, choose **Run**, and set
+   **Build Configuration** to `Debug`.
+3. Open `src/main.cpp` or a GLFW wrapper source file and click a line number to
+   set a breakpoint.
+4. Use **Product > Run** to build and debug the application.
+
+Run the unit tests from Xcode by selecting the `unit_tests` scheme and using
+**Product > Test**. You can also use the generated build directory from the
+terminal:
+
+```sh
+cmake --build xcode-build --config Debug --target unit_tests
+ctest --test-dir xcode-build -C Debug --output-on-failure
+```
+
+Do not create a separate Xcode project for `main.cpp`; opening the
+CMake-generated project ensures GLFW, GLM, and Vulkan settings are part of the
+selected target.
 
 ## Troubleshooting
 

@@ -15,5 +15,5 @@ int32_t main(int32_t, char**) {
     }
 
     // The window is destroyed before glfw, whose destructor terminates GLFW.
-    return 0;
+    return EXIT_SUCCESS;
 }

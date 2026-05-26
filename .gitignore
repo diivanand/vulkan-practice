@@ -1,6 +1,7 @@
 # Build directories
 build/
 cmake-build-*/
+xcode-build/
 out/
 
 # CMake generated files
