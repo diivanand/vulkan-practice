@@ -7,6 +7,27 @@ window closes. Vulkan is linked in preparation for the next rendering steps.
 GLFW, GLM, and GoogleTest are downloaded and built by CMake with
 `FetchContent`; do not install GLFW separately for this project.
 
+## C++ Naming Conventions
+
+Use identifier casing consistently so that ownership and API roles are clear
+when extending the project:
+
+| Identifier kind | Style | Examples |
+| --- | --- | --- |
+| Classes, structs, type aliases, and enum types | `PascalCase` | `GlfwInitialization`, `GlfwWindowDeleter`, `UniqueGlfwWindow` |
+| Variables and objects | `camelCase` | `rawWindow`, `swapchainImageCount` |
+| Member variables | `camelCase` with a trailing underscore | `window_`, `instance_` |
+| Free functions and methods | `camelCase` | `createWindow()`, `createInstance()` |
+| Namespaces | descriptive `snake_case` | `windowing`, `render_resources` |
+| Constants and macros | `ALL_UPPERCASE` | `MAX_FRAMES_IN_FLIGHT` |
+| Strong enum values | `PascalCase` | `PresentMode::Mailbox` |
+
+Keep namespace names concise and responsibility-based. Use `windowing` for the
+current GLFW-backed RAII layer rather than naming project wrappers as generic
+utilities. Preserve external library spelling when referring to its API types,
+functions, or macros, such as `GLFWwindow`, `glfwCreateWindow()`, and
+`GLFW_INCLUDE_NONE`.
+
 ## Prerequisites
 
 - CMake 3.22 or newer.
