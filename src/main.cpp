@@ -6,9 +6,9 @@
 #include "glfw_window.h"
 
 int32_t main(int32_t, char**) {
-    GlfwInitialization glfw; // RAII init/terminate
+    windowing::GlfwInitialization glfw; // RAII init/terminate
 
-    unique_glfw_window window = create_window(800, 600, "Vulkan Engine");
+    windowing::unique_glfw_window window = windowing::create_window(800, 600, "Vulkan Engine");
 
     while (!glfwWindowShouldClose(window.get())) {
         glfwPollEvents();

@@ -1,7 +1,7 @@
-#include <gtest/gtest.h>
-
 #include <memory>
 #include <type_traits>
+
+#include <gtest/gtest.h>
 
 #include "glfw_initialization.h"
 #include "glfw_window.h"
@@ -21,42 +21,37 @@ using MockUniquePtr = std::unique_ptr<int, MockDeleter>;
 
 TEST(TypeTraits, UniquePtrWithCustomDeleter) {
     // Verify unique_ptr with custom deleter is move-only
-    static_assert(std::is_move_constructible_v<MockUniquePtr>,
-                  "unique_ptr should be move constructible");
-    static_assert(std::is_move_assignable_v<MockUniquePtr>,
-                  "unique_ptr should be move assignable");
-    static_assert(!std::is_copy_constructible_v<MockUniquePtr>,
-                  "unique_ptr should not be copy constructible");
-    static_assert(!std::is_copy_assignable_v<MockUniquePtr>,
-                  "unique_ptr should not be copy assignable");
+    static_assert(std::is_move_constructible_v<MockUniquePtr>, "unique_ptr should be move constructible");
+    static_assert(std::is_move_assignable_v<MockUniquePtr>, "unique_ptr should be move assignable");
+    static_assert(!std::is_copy_constructible_v<MockUniquePtr>, "unique_ptr should not be copy constructible");
+    static_assert(!std::is_copy_assignable_v<MockUniquePtr>, "unique_ptr should not be copy assignable");
 
     SUCCEED();
 }
 
 TEST(TypeTraits, DeleterIsNoexcept) {
     // Verify deleter call operator is noexcept
-    static_assert(noexcept(MockDeleter{}(nullptr)),
-                  "Deleter should be noexcept");
+    static_assert(noexcept(MockDeleter{}(nullptr)), "Deleter should be noexcept");
 
     SUCCEED();
 }
 
 TEST(TypeTraits, GlfwInitializationCannotDuplicateTerminationOwnership) {
-    static_assert(!std::is_copy_constructible_v<GlfwInitialization>);
-    static_assert(!std::is_copy_assignable_v<GlfwInitialization>);
-    static_assert(!std::is_move_constructible_v<GlfwInitialization>);
-    static_assert(!std::is_move_assignable_v<GlfwInitialization>);
-    static_assert(std::is_nothrow_destructible_v<GlfwInitialization>);
+    static_assert(!std::is_copy_constructible_v<windowing::GlfwInitialization>);
+    static_assert(!std::is_copy_assignable_v<windowing::GlfwInitialization>);
+    static_assert(!std::is_move_constructible_v<windowing::GlfwInitialization>);
+    static_assert(!std::is_move_assignable_v<windowing::GlfwInitialization>);
+    static_assert(std::is_nothrow_destructible_v<windowing::GlfwInitialization>);
 
     SUCCEED();
 }
 
 TEST(TypeTraits, GlfwWindowHasUniqueTransferableOwnership) {
-    static_assert(std::is_move_constructible_v<unique_glfw_window>);
-    static_assert(std::is_move_assignable_v<unique_glfw_window>);
-    static_assert(!std::is_copy_constructible_v<unique_glfw_window>);
-    static_assert(!std::is_copy_assignable_v<unique_glfw_window>);
-    static_assert(noexcept(GLFWWindowDeleter{}(nullptr)));
+    static_assert(std::is_move_constructible_v<windowing::unique_glfw_window>);
+    static_assert(std::is_move_assignable_v<windowing::unique_glfw_window>);
+    static_assert(!std::is_copy_constructible_v<windowing::unique_glfw_window>);
+    static_assert(!std::is_copy_assignable_v<windowing::unique_glfw_window>);
+    static_assert(noexcept(windowing::GLFWWindowDeleter{}(nullptr)));
 
     SUCCEED();
 }
@@ -136,9 +131,7 @@ TEST(UniquePtr, CustomDeleterIsCalled) {
 
 TEST(UniquePtr, DeleterHandlesNull) {
     int delete_count = 0;
-    {
-        std::unique_ptr<int, TrackingDeleter> ptr(nullptr, TrackingDeleter{&delete_count});
-    }
+    { std::unique_ptr<int, TrackingDeleter> ptr(nullptr, TrackingDeleter{&delete_count}); }
     EXPECT_EQ(delete_count, 0);
 }
 

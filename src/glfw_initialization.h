@@ -4,6 +4,8 @@
 
 #pragma once
 
+namespace windowing {
+
 /// @brief RAII wrapper for GLFW initialization and termination.
 ///
 /// Initializes GLFW on construction and terminates on destruction.
@@ -23,3 +25,5 @@ public:
     GlfwInitialization(GlfwInitialization&&) = delete;
     GlfwInitialization& operator=(GlfwInitialization&&) = delete;
 };
+
+} // namespace windowing
