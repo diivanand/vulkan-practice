@@ -27,6 +27,6 @@ using UniqueGlfwWindow = std::unique_ptr<GLFWwindow, GlfwWindowDeleter>;
 /// @param title Window title (UTF-8 encoded).
 /// @return Unique pointer to the managed GLFWwindow.
 /// @throws std::runtime_error if window creation fails.
-UniqueGlfwWindow createWindow(int width, int height, std::string_view title);
+auto createWindow(int width, int height, std::string_view title) -> UniqueGlfwWindow;
 
 } // namespace windowing

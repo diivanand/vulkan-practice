@@ -12,8 +12,8 @@
 
 // Test that unique_ptr with custom deleter compiles correctly
 struct MockDeleter {
-    void operator()(int* p) const noexcept {
-        delete p;
+    void operator()(const int* pointer) const noexcept {
+        delete pointer;
     }
 };
 
@@ -60,17 +60,17 @@ TEST(TypeTraits, GlfwWindowHasUniqueTransferableOwnership) {
 // RAII pattern tests
 // =============================================================================
 
-class RAIICounter {
+class RaiiCounter {
 public:
-    explicit RAIICounter(int& counter) : counter_(counter) {
+    explicit RaiiCounter(int& counter) : counter_(counter) {
         ++counter_;
     }
-    ~RAIICounter() {
+    ~RaiiCounter() {
         --counter_;
     }
 
-    RAIICounter(const RAIICounter&) = delete;
-    RAIICounter& operator=(const RAIICounter&) = delete;
+    RaiiCounter(const RaiiCounter&) = delete;
+    auto operator=(const RaiiCounter&) -> RaiiCounter& = delete;
 
 private:
     int& counter_;
@@ -79,7 +79,7 @@ private:
 TEST(RAII, ConstructorIncrementsCounter) {
     int counter = 0;
     {
-        RAIICounter raii(counter);
+        RaiiCounter raii(counter);
         EXPECT_EQ(counter, 1);
     }
     EXPECT_EQ(counter, 0);
@@ -87,7 +87,7 @@ TEST(RAII, ConstructorIncrementsCounter) {
 
 TEST(RAII, DestructorDecrementsCounter) {
     int counter = 0;
-    auto* raii = new RAIICounter(counter);
+    auto* raii = new RaiiCounter(counter);
     EXPECT_EQ(counter, 1);
     delete raii;
     EXPECT_EQ(counter, 0);
@@ -95,13 +95,13 @@ TEST(RAII, DestructorDecrementsCounter) {
 
 TEST(RAII, ExceptionSafetyOnConstruction) {
     int counter = 0;
-    try {
-        RAIICounter raii(counter);
-        EXPECT_EQ(counter, 1);
-        throw std::runtime_error("Test exception");
-    } catch (const std::runtime_error&) {
-        // Counter should be decremented when raii goes out of scope
-    }
+    EXPECT_THROW(
+        {
+            RaiiCounter raii(counter);
+            EXPECT_EQ(counter, 1);
+            throw std::runtime_error("Test exception");
+        },
+        std::runtime_error);
     EXPECT_EQ(counter, 0);
 }
 
@@ -110,48 +110,50 @@ TEST(RAII, ExceptionSafetyOnConstruction) {
 // =============================================================================
 
 struct TrackingDeleter {
-    int* delete_count;
+    int* deleteCount;
 
-    void operator()(int* p) const noexcept {
-        if (p) {
-            ++(*delete_count);
-            delete p;
+    void operator()(const int* pointer) const noexcept {
+        if (pointer != nullptr) {
+            ++(*deleteCount);
+            delete pointer;
         }
     }
 };
 
+constexpr int TRACKED_VALUE = 42;
+
 TEST(UniquePtr, CustomDeleterIsCalled) {
-    int delete_count = 0;
+    int deleteCount = 0;
     {
-        std::unique_ptr<int, TrackingDeleter> ptr(new int(42), TrackingDeleter{&delete_count});
-        EXPECT_EQ(delete_count, 0);
+        std::unique_ptr<int, TrackingDeleter> pointer(new int(TRACKED_VALUE), TrackingDeleter{&deleteCount});
+        EXPECT_EQ(deleteCount, 0);
     }
-    EXPECT_EQ(delete_count, 1);
+    EXPECT_EQ(deleteCount, 1);
 }
 
 TEST(UniquePtr, DeleterHandlesNull) {
-    int delete_count = 0;
-    { std::unique_ptr<int, TrackingDeleter> ptr(nullptr, TrackingDeleter{&delete_count}); }
-    EXPECT_EQ(delete_count, 0);
+    int deleteCount = 0;
+    { std::unique_ptr<int, TrackingDeleter> pointer(nullptr, TrackingDeleter{&deleteCount}); }
+    EXPECT_EQ(deleteCount, 0);
 }
 
 TEST(UniquePtr, ReleaseDoesNotCallDeleter) {
-    int delete_count = 0;
-    int* raw = nullptr;
+    int deleteCount = 0;
+    int* rawPointer = nullptr;
     {
-        std::unique_ptr<int, TrackingDeleter> ptr(new int(42), TrackingDeleter{&delete_count});
-        raw = ptr.release();
+        std::unique_ptr<int, TrackingDeleter> pointer(new int(TRACKED_VALUE), TrackingDeleter{&deleteCount});
+        rawPointer = pointer.release();
     }
-    EXPECT_EQ(delete_count, 0);
-    delete raw;
+    EXPECT_EQ(deleteCount, 0);
+    delete rawPointer;
 }
 
 TEST(UniquePtr, ResetCallsDeleter) {
-    int delete_count = 0;
-    std::unique_ptr<int, TrackingDeleter> ptr(new int(42), TrackingDeleter{&delete_count});
-    EXPECT_EQ(delete_count, 0);
-    ptr.reset();
-    EXPECT_EQ(delete_count, 1);
+    int deleteCount = 0;
+    std::unique_ptr<int, TrackingDeleter> pointer(new int(TRACKED_VALUE), TrackingDeleter{&deleteCount});
+    EXPECT_EQ(deleteCount, 0);
+    pointer.reset();
+    EXPECT_EQ(deleteCount, 1);
 }
 
 // =============================================================================

@@ -11,7 +11,7 @@
 namespace windowing {
 
 GlfwInitialization::GlfwInitialization() {
-    if (!glfwInit()) {
+    if (glfwInit() == GLFW_FALSE) {
         throw std::runtime_error("Failed to initialize GLFW");
     }
 }

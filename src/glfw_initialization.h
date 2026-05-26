@@ -21,9 +21,9 @@ public:
     ~GlfwInitialization() noexcept;
 
     GlfwInitialization(const GlfwInitialization&) = delete;
-    GlfwInitialization& operator=(const GlfwInitialization&) = delete;
+    auto operator=(const GlfwInitialization&) -> GlfwInitialization& = delete;
     GlfwInitialization(GlfwInitialization&&) = delete;
-    GlfwInitialization& operator=(GlfwInitialization&&) = delete;
+    auto operator=(GlfwInitialization&&) -> GlfwInitialization& = delete;
 };
 
 } // namespace windowing
